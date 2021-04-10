@@ -4,6 +4,7 @@ const posts = require("./posts-model.js")
 
 const router = express.Router()
 
+
 //Gets all the posts
 router.get("/api/posts", (req, res) => {
     posts.find()
