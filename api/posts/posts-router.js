@@ -57,6 +57,7 @@ router.post("/api/posts", (req, res) => {
     }
 })
 
+//Deletes a single post
 router.delete("/api/posts/:id", (req, res) => {
     posts.remove(req.params.id)
         .then((response) => {
@@ -72,6 +73,52 @@ router.delete("/api/posts/:id", (req, res) => {
             console.log(error)
             res.status(500).json({
                 message: "the post could not be removed"
+            })
+        })
+})
+
+//Updates a single post
+router.put("/api/posts/:id", (req, res) => {
+    if (!req.body.title || !req.body.contents) {
+        res.status(400).json({
+            message: "Please provide title and contents for the post"
+        })
+    } else {
+        posts.update(req.params.id, req.body)
+            .then((response) => {
+                if (response) {
+                    res.status(200).json(response)
+                } else {
+                    res.status(404).json({
+                        message: "The post with the specified ID does not exist"
+                    })
+                }
+            })
+            .catch((error) => {
+                console.log(error)
+                res.status(500).json({
+                    message: "The post information could not be modified"
+                })
+            })
+    }
+})
+
+//Gets the posts for a comment
+router.get("/api/posts/:id/comments", (req, res) => {
+    posts.findPostComments(req.params.id)
+        .then((comments) => {
+            if (comments) {
+                res.status(200).json(comments)
+            } else {
+                res.status(404).json({
+                    message: "The post with the specified ID does not exist"
+                })
+            }
+        })
+        .catch((error) => {
+            console.log(error)
+            res.status(500).json({
+                message: "The comments information could not be retrieved"
             })
         })
 })
