@@ -106,21 +106,24 @@ router.put("/api/posts/:id", (req, res) => {
 
 //Gets the posts for a comment
 router.get("/api/posts/:id/comments", (req, res) => {
-    posts.findPostComments(req.params.id)
-        .then((comments) => {
-            if (comments) {
-                res.status(200).json(comments)
+    posts.findById(req.params.id)
+        .then((post) => {
+            if (post) {
+                posts.findPostComments(req.params.id)
+                    .then((comments) => {
+                        res.status(200).json(comments)
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                        res.status(500).json({
+                            message: "The comments information could not be retrieved"
+                        })
+                    })
             } else {
                 res.status(404).json({
                     message: "The post with the specified ID does not exist"
                 })
             }
-        })
-        .catch((error) => {
-            console.log(error)
-            res.status(500).json({
-                message: "The comments information could not be retrieved"
-            })
         })
 })
 
