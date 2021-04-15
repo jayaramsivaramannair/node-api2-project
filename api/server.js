@@ -8,6 +8,11 @@ const server = express()
 
 server.use(express.json())
 
+server.get("/", (req, res) => {
+    res.status(200).json({
+        message: "Welcome to the Live Version of my Posts API",
+    })
+})
 server.use(postsRouter)
 
 module.exports = server
